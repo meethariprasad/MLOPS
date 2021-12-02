@@ -4,3 +4,4 @@ MLOps
 Updated Readme from branch
 
 Issue fixed
+Updated CICD

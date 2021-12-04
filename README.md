@@ -6,3 +6,4 @@ Updated Readme from branch
 Issue fixed
 Updated CICD
 Updated Azure Board Branch
+Direct Integration

@@ -43,64 +43,6 @@ from sklearn.metrics import mean_squared_error
 
 # COMMAND ----------
 
-# MAGIC %md Import the dataset from scikit-learn and create the training and test datasets. 
-
-# COMMAND ----------
-
-from sklearn.model_selection import train_test_split
-from sklearn.datasets import load_diabetes
-db = load_diabetes()
-X = db.data
-y = db.target
-X_train, X_test, y_train, y_test = train_test_split(X, y)
-
-# COMMAND ----------
-
-# MAGIC %md Create a random forest model and log parameters, metrics, and the model using `mlflow.sklearn.autolog()`.
-
-# COMMAND ----------
-
-# Enable autolog()
-# mlflow.sklearn.autolog() requires mlflow 1.11.0 or above.
-mlflow.sklearn.autolog()
-
-# With autolog() enabled, all model parameters, a model score, and the fitted model are automatically logged.  
-with mlflow.start_run():
-  
-  # Set the model parameters. 
-  n_estimators = 100
-  max_depth = 6
-  max_features = 3
-  
-  # Create and train model.
-  rf = RandomForestRegressor(n_estimators = n_estimators, max_depth = max_depth, max_features = max_features)
-  rf.fit(X_train, y_train)
-  
-  # Use the model to make predictions on the test dataset.
-  predictions = rf.predict(X_test)
-
-# COMMAND ----------
-
-predictions = rf.predict(X_test)
-import pandas as pd
-predictions_data=pd.DataFrame(predictions,columns=["Predictions"])
-predictions_data.to_csv("predictions_data.csv")
-import os
-os.listdir()
-
-# COMMAND ----------
-
-from mlflow.tracking import MlflowClient
-model_name="sklean_diabetes"
-client = MlflowClient()
-client.transition_model_version_stage(
-  name=model_name,
-  version=1,
-  stage="Production",
-)
-
-# COMMAND ----------
-
 import mlflow.pyfunc
 
 model_version_uri = "models:/{model_name}/1".format(model_name=model_name)
